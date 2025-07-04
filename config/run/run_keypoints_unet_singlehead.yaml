@@ -1,0 +1,86 @@
+hydra:
+  run:
+    dir: outputs/learn/${train.path.exp_name}/${train.path.version_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+  job:
+    chdir: True
+
+run: 
+  mode: train
+
+data:
+  make:
+    skip_pick_place: True
+    exchange_left_right: True
+    coverage_weight_exp: 0.0
+  common:
+    valid_size: 0.2
+    batch_size: 256
+    num_workers: 32
+    drop_last: True
+  dataset:
+    dtype: ${misc.hardware.dtype}
+    aug:
+      depth_scale: [0.5, 1.5]
+      tilt: 3e-2
+      noise_std: 5e-3
+      use_conv_on_noise: True
+      random_flip_mask: False
+      flip_mask_prob: 0.05
+      scale: [0.9, 1.1]
+      translate: 1
+
+pl:
+  model:
+    d_unit: 0.1
+    net:
+      actor:
+        channels_list: [16, 32, 64, 128, 256, 512] ## [32, 64, 128, 256, 512, 1024]
+      critic:
+        channels_list: [8, 16, 32, 64, 128, 256] # [16, 32, 64, 128, 256, 512]
+        output_mlp_hidden: [1024, 256, 64, 1]
+      
+  learn:
+    weight_seg_smooth: 0.01
+    weight_cls_smooth: 5.0
+    valid:
+      plot_batch_idx: [0]
+      plot_dense_predict_num: 8
+    optimizer:
+      name: AdamW
+      cfg:
+        lr: 1e-3
+        weight_decay: 1e-2
+    schedule:
+      name: MultiStepLR
+      cfg:
+        milestones: [50000]
+        gamma: 0.1
+
+train:
+  path:
+    exp_name: keypoints
+    version_name: v2
+    data_paths: ["outputs/data"]
+    ckpt:
+  cfg:
+    max_steps: 100000
+    limit_train_batches: 1. # use how much data to train
+    limit_val_batches: 1. # use how much data to validate
+    log_every_n_steps: 200
+    val_check_interval: 2000 # How often to evaluate on the validation set
+    ckpt_every_n_steps: 2000 # How often to save checkpoint
+
+misc:
+  seed: 20020408 # ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  step_offset: 0
+  hardware:
+    precision: high # [highest, high, medium]
+    cuda: True
+    gpuids: [0]
+    dtype: float32
+  taichi:
+    device: cpu
+    device_memory_GB: 1.
+  debug:
+    profiler: Simple
+    model_summary_max_depth: 5

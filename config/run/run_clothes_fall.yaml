@@ -1,0 +1,110 @@
+hydra:
+  job:
+    chdir: True
+  job_logging:
+    root:
+      level: INFO
+      handlers:
+      - file
+
+glb_cfg:
+  seed: ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  batch_size: 1
+  default_float: float32
+  default_int: int32
+  torch_device: cuda
+  default_mass: 1.
+  default_inertia: 1.
+  log_verbose: 1
+
+output:
+  steps: 10
+
+sim:
+  step_dt: 0.05
+  substeps: 10
+
+  spatial_cfg:
+    bounds: [[-1., -0.5, 0.2], [1., 1.5, 2.2]]
+    xyz_size: [128, 128, 128]
+    max_spatial_cell_size: 1024
+    xyz_block_size: 8
+    spatial_cell_chunk_size: 16
+    max_bb_occupy_num: 128 # ~ 5 * 5 * 5, 8cm * 8cm * 8cm
+
+  garment:
+    skip: False
+    CG:
+      CG_max_iter: 64
+      CG_relative_tol: 1e-3
+      CG_dx_tol: 1e-6
+    use_ccd: True
+    ccd:
+      num_max_step_iterations: 4
+      num_cubic_solver_iterations: 16
+      ccd_step_discount: 0.9
+      min_step_length: 1e-3
+    collision_mask_block_size: 16
+    clamp_velocity:
+      use: True
+      threshold: 3. # v0
+      strength: 1. # a, v-v0 -> log(a(v-v0) + 1) / a
+  
+  table:
+    is_dynamic: False
+  
+  garment_self_collision:
+    name: self_collision
+    max_vert_face_collision_pair: 12000
+    max_edge_edge_collision_pair: 33000
+    balance_distance: 5e-3
+    barrier_width: 5e-3
+    barrier_power: 3
+    barrier_strength: 1e7
+    dv_eps: 1e-7
+    mu: 0.5
+    friction_relative_velocity_scale: 0.1 # a: f=min(u*N, a*m*v/dt)
+
+  garment_table:
+    balance_distance: 5e-3
+    mu: 1.0
+    restitution: 0.0
+    max_depenetration_velocity: 1.0
+    response_time: 1e-1
+    dv_eps: 1e-7
+
+asset:
+  garment:
+    cfg:
+      name: garment
+      h: 2e-3
+      rho: 1e3
+      E: 3e5
+      nu: 0.2
+      alpha: 1e0
+      stretch_relax_t: 2e-1
+      bending_relax_t: 2e-1
+    mesh_path: assets/clothes/valid/00/clothes.obj
+    translation: [0., 0.5, 0.8]
+
+  table:
+    cfg:
+      name: table
+      type: mesh
+      sdf_cfg:
+        calculate_sdf: True
+        expand_distance: .032323
+        size: [75, 50, 25]
+    mesh_path: assets/misc/table.obj
+    pos: [0., 0., 0.68, 1., 0., 0., 0.]
+
+setup:
+  cuda: 0
+  taichi:
+    arch: cuda
+    device_memory_GB: 2
+
+    debug: False
+    advanced_optimization: True
+    fast_math: False
+    offline_cache: True

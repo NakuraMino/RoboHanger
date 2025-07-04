@@ -1,0 +1,94 @@
+hydra:
+  run:
+    dir: outputs/learn/${train.path.exp_name}/${run.endpoint}/${train.path.version_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+  job:
+    chdir: True
+
+run: 
+  mode: train
+  endpoint: left
+
+data:
+  make:
+    mask_interp: False
+    use_inverse_mask: True
+  common:
+    valid_size: 0.2
+    batch_size: 64
+    num_workers: 16
+    drop_last: True
+  dataset:
+    dtype: ${misc.hardware.dtype}
+    aug:
+      depth_scale: [0.5, 1.5]
+      tilt: 3e-2
+      noise_std: 2e-2
+      use_conv_on_noise: True
+      random_flip_mask: False
+      flip_mask_prob: 0.05
+      mask_inv_fail_prob: 0.3
+
+pl:
+  model:
+    d_unit: 0.1
+    mask_dims: ${_eval_:'__import__("omegaconf").ListConfig(([0, 1] if ${data.make.use_inverse_mask} == True else [0]) if "${run.endpoint}" == "left" else [0, 2])'}
+    net1:
+      channels_list: [8, 16, 32, 64, 128] # ${_eval_:'__import__("omegaconf").ListConfig([8, 16, 32, 64, 128]) if "${run.endpoint}" == "left" else __import__("omegaconf").ListConfig([4, 8, 16, 32, 64])'}
+    net2:
+      channels_list: [8, 16, 32, 64, 128] # ${_eval_:'__import__("omegaconf").ListConfig([8, 16, 32, 64, 128]) if "${run.endpoint}" == "left" else __import__("omegaconf").ListConfig([4, 8, 16, 32, 64])'}
+  learn:
+    net1_start_step: 0 # ${_eval_:'1000 if "${run.endpoint}" == "left" else 0'}
+    net1_use_binary_lable: True
+    positive_weight: 1.0
+    negative_weight: 1.0
+    valid:
+      plot_batch_idx: [0]
+      plot_dense_predict_num: 8
+    optimizer:
+      action_1:
+        name: AdamW
+        cfg:
+          lr: 1e-4
+          weight_decay: 1e-2
+      action_2:
+        name: AdamW
+        cfg:
+          lr: 1e-3
+          weight_decay: 1e-2
+    schedule:
+      action_1:
+        name: MultiStepLR
+        cfg:
+          milestones: []
+          gamma: 1.0
+      action_2:
+        name: MultiStepLR
+        cfg:
+          milestones: []
+          gamma: 1.0
+
+train:
+  path:
+    exp_name: insert
+    version_name: v0
+    data_paths: ["outputs/data"]
+    ckpt:
+  cfg:
+    max_steps: 4000
+    limit_train_batches: 1. # use how much data to train
+    limit_val_batches: 1. # use how much data to validate
+    log_every_n_steps: 10
+    val_check_interval: 50 # How often to evaluate on the validation set
+    ckpt_every_n_steps: 100 # = 100 * 2, How often to save checkpoint
+
+misc:
+  seed: 0 # ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  step_offset: 0
+  hardware:
+    precision: high # [highest, high, medium]
+    cuda: True
+    gpuids: [0]
+    dtype: float32
+  debug:
+    profiler: Simple
+    model_summary_max_depth: 5

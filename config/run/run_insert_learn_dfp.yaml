@@ -1,0 +1,104 @@
+hydra:
+  run:
+    dir: outputs/learn_e2e/${train.path.exp_name}/${train.path.version_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+  job:
+    chdir: True
+
+run: 
+  mode: train
+  endpoint: left
+
+data:
+  common:
+    valid_size: 0.05
+    batch_size: 256
+    num_workers: 32
+    drop_last: True
+  dataset:
+    height: 96
+    width: 128
+    obs_horizon: 2
+    actpred_len: 16
+    normalize_use_max_scale: False
+    statistics: src/robohang/policy/insert/statistics.npy
+    depth_noise_std: 2e-3
+    dtype: ${misc.hardware.dtype}
+
+pl:
+  model:
+    height: ${data.dataset.height}
+    width: ${data.dataset.width}
+    obs_horizon: ${data.dataset.obs_horizon}
+    actpred_len: ${data.dataset.actpred_len}
+    normalize_use_max_scale: ${data.dataset.normalize_use_max_scale}
+    stat_path: ${data.dataset.statistics}
+    joints_weight: 1.
+    grip_weight: 1.
+    ddpm:
+      num_train_timesteps: 100
+      beta_start: 0.0001
+      beta_end: 0.02
+      beta_schedule: squaredcos_cap_v2
+    net:
+      name: cnn # [cnn, transformer]
+      cnn:
+        enc_out_dim: 512
+        obs_enc:
+          channels_list: [16, 32, 64, 128, 256, 512]
+          output_mlp_hidden: [1024, 1024]
+        sta_enc:
+          hidden_dim: [1024, 1024]
+        cond_unet:
+          diffusion_step_embed_dim: 128
+          down_dims: [512, 1024, 2048]
+          kernel_size: 5
+      transformer:
+        token_dim: 512
+        obs_enc:
+          output_dim: ${..token_dim}
+          channels_list: [16, 32, 64, 128, 256, 512]
+        sta_enc:
+          output_dim: ${..token_dim}
+          hidden_dim: [1024, 1024]
+        transformer:
+          n_layer: 8
+          n_head: 8
+          n_emb: 1024
+  learn:
+    joint_loss_str: l1_loss
+    optimizer:
+      cfg:
+        lr: 1e-4
+        weight_decay: 1e-2
+    scheduler:
+      name: MultiStepLR
+      cfg:
+        milestones: []
+        gamma: 0.1
+
+train:
+  path:
+    exp_name: insertdfp
+    version_name: v0
+    data_paths: ["outputs/data"]
+    ckpt:
+  cfg:
+    max_steps: 40000
+    limit_train_batches: 1. # use how much data to train
+    limit_val_batches: 1. # use how much data to validate
+    log_every_n_steps: 50
+    val_check_interval: 1000 # How often to evaluate on the validation set
+    ckpt_every_n_steps: 1000 # How often to save checkpoint
+    ddp_find_unused_parameters: False
+
+misc:
+  seed: 0 # ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  step_offset: 0
+  hardware:
+    precision: high # [highest, high, medium]
+    cuda: True
+    gpuids: [6, 7]
+    dtype: float32
+  debug:
+    profiler: Simple
+    model_summary_max_depth: 5

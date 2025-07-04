@@ -1,0 +1,113 @@
+insert_gym:
+  parameter:
+    damp_per_substep: 3e-2
+    keypoints_name: 
+      left: upper_left
+      right: upper_right
+    fps_on_unit_sphere: assets/misc/fps_unit_1024.ply
+    stiffness: 1e4
+
+  primitive:
+    init_garment:
+      pick_place_radius: 0.02
+      pick_place_offset:
+        left: [-0.03, -0.01, 0.]
+        right: [0.03, -0.01, 0.]
+      init_pos: 
+        y: [0.65, 0.65]
+        h: [0.75, 0.75]
+        steps: 20
+      drag_hand_dist: [1.0, 1.2]
+      drag_inter:
+      - x: [-0.01, +0.01]
+        y: [0.08, 0.12]
+        h: [0.73, 0.77]
+        steps: 14
+      - x: [-0.01, +0.01]
+        y: [0.28, 0.32]
+        h: [0.28, 0.32]
+        steps: 14
+      - x: [-0.01, +0.01]
+        y: [0.46, 0.50]
+        h: [0.02, 0.04]
+        steps: 12
+      wait_step: 20
+      perturb:
+        global_lin_vel_dict: 
+          mean: [0., 0., 0.]
+          std: [.1, .1, 0.]
+        global_ang_vel_dict: 
+          mean: [0., 0., 0.]
+          std: [0., 0., .05]
+        global_rot_xyz_dict: 
+          mean: [0., 0., 0.]
+          std: [.05, .05, 0.]
+        local_vel_std: [.2, .2, .2]
+    lift:
+      action_space:
+        min: [-0.15, 0.35]
+        max: [+0.05, 0.55]
+      pick_points:
+        h_upper: 0.20
+        h_inter: 0.08
+        h_delta: 0.015
+        h_later: 0.08
+        h_later_min: 0.05
+        steps: [8, 8, 6, 8]
+    press:
+      action_space:
+        min: [-0.06, 0.42] # hanger origin: [+0.011, 0.611]
+        max: [+0.06, 0.54] # hanger origin: [+0.131, 0.731]
+      hanger_rpy:
+        absolute: [0.0, 0.0, 0.7853981633974483]
+        transform: [-0.7853981633974483, 0.0, 0.0] # agent_rpy @ transform = absolute
+      press:
+        h_upper: 0.20
+        h_inter: 0.08
+        h_lower: 0.025
+        steps: [16, 8, 8]
+      insert:
+        xy: [-0.124, -0.125] # [-0.113, +0.007] x [0.486, 0.606]
+        xyz_delta_left: [-0.2, 0.0, 0.1]
+        steps: [14, 10, 14]
+      reset:
+        h_upper: 0.20
+        steps: [10, 10]
+    drag: 
+      action_space:
+        min: [-0.05, 0.40]
+        max: [+0.15, 0.55]
+      hanger_rpy:
+        absolute: [0.0, 0.0, 0.7853981633974483]
+        transform: [0.0, 0.0, 3.141592653589793] # agent_rpy @ transform = absolute
+      regrasp:
+        h_hanger_upper: 0.04
+        steps: [10, 10]
+      pick_points:
+        h_upper: 0.20
+        h_inter: 0.08
+        h_delta: 0.015
+        h_later: 0.07
+        steps: [8, 8, 6, 8]
+      drag:
+      - xy: [0.10, 0.00]
+        steps: 20
+      - xy: [0.08, 0.06]
+        steps: 10
+    rotate:
+      action_space:
+        min: [+0.09, 0.35] # [-0.095, 0.435]
+        max: [+0.19, 0.45] # [+0.005, 0.535]
+      hanger_rpy:
+        absolute: [0.0, 0.0, 0.0]
+        transform: [0.0, 0.0, 3.141592653589793] # agent_rpy @ transform = absolute
+      rotate:
+        h: ${...drag.regrasp.h_hanger_upper}
+        steps: [30]
+      liftup1:
+        xyh_l: [0.00, 0.50, 0.20]
+        steps: 15
+      liftup2:
+        xyh_l: [0.00, 0.50, 0.40]
+        steps: 15
+      reset: ${..press.reset}

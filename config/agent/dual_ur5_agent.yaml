@@ -1,0 +1,92 @@
+agent:
+  init:
+    base:
+      name: base_link
+      pos: [0.0, 0.2, 0.6, 0.0, 0.0, 0.0, 0.0]
+    qpos:
+      leftarm_shoulder_pan_joint: +2.0
+      leftarm_shoulder_lift_joint: -1.8
+      leftarm_elbow_joint: -1.8
+      leftarm_wrist_1_joint: -1.7
+      leftarm_wrist_2_joint: -1.6
+      leftarm_wrist_3_joint: -3.4
+
+      rightarm_shoulder_pan_joint: +2.0
+      rightarm_shoulder_lift_joint: -1.8
+      rightarm_elbow_joint: -1.8
+      rightarm_wrist_1_joint: -1.7
+      rightarm_wrist_2_joint: -1.6
+      rightarm_wrist_3_joint: -3.4
+
+  grasp:
+    left:
+      link: leftarm_tcp_link
+      rpy: [0., 0., 0.]
+      joints:
+      - leftarm_shoulder_pan_joint
+      - leftarm_shoulder_lift_joint
+      - leftarm_elbow_joint
+      - leftarm_wrist_1_joint
+      - leftarm_wrist_2_joint
+      - leftarm_wrist_3_joint
+      cfg:
+        link_str: ${..link}
+        r_th: 0.01
+        z_th: 0.01
+    right:
+      link: rightarm_tcp_link
+      rpy: [0., 0., 0.]
+      joints:
+      - rightarm_shoulder_pan_joint
+      - rightarm_shoulder_lift_joint
+      - rightarm_elbow_joint
+      - rightarm_wrist_1_joint
+      - rightarm_wrist_2_joint
+      - rightarm_wrist_3_joint
+      cfg:
+        link_str: ${..link}
+        r_th: 0.01
+        z_th: 0.01
+  camera:
+    prop:
+      small:
+        height: 128
+        width: 128
+        fx: 159.2
+        fy: 159.2
+        cx: 64.8
+        cy: 61.2
+        skew: 0.
+      medium:
+        height: 720
+        width: 1280
+        fx: 1200
+        fy: 1200
+        cx: 640
+        cy: 360
+        skew: 0.
+      large:
+        height: 1440
+        width: 2160
+        fx: 2400.0
+        fy: 2400.0
+        cx: 1080.0
+        cy: 720.0
+        skew: 0.
+    top:
+      link: base
+      origin: 
+        xyz: [0., 0., 1.]
+        rpy: [0., 1., 1.5707963267948966]
+    left:
+      link: leftarm_camera_link
+      origin: 
+        xyz: [0., 0., 0.]
+        rpy: [0., 0., 0.]
+    right:
+      link: rightarm_camera_link
+      origin: 
+        xyz: [0., 0., 0.]
+        rpy: [0., 0., 0.]
+    side:
+      pos: [-1.5, +2.0, +3.0, 0.85355339, 0.14644661, 0.35355339, -0.35355339]

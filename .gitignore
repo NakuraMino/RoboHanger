@@ -1,0 +1,24 @@
+# cache file
+**pycache**
+.tmp**
+**.convex.**
+**cache.pkl
+**cache.json
+
+# test file
+**test**
+
+# package file
+**egg-info**
+
+# output
+output**
+
+# cloth_dataset
+cloth_dataset**
+
+# vscode
+.vscode**
+
+# viewer
+imgui.ini

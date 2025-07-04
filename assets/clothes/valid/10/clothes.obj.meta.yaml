@@ -1,0 +1,198 @@
+cfg:
+  body:
+    n_horizon: 40
+    radius_x:
+      points:
+      - 0.17
+      - 0.17
+      - 0.17
+      - 0.172
+      interp: quadratic
+    radius_y:
+      points:
+      - 0.05
+      - 0.05
+      - 0.05
+      - 0.05
+      interp: quadratic
+    level_z:
+      points:
+      - -0.045
+      - 0.08
+      - 0.205
+      - 0.33
+    segment:
+    - 6
+    - 6
+    - 7
+  chest:
+    n_horizon: 23
+    radius_x:
+      points:
+      - 0.172
+      - 0.19
+      - 0.21
+      - 0.195
+      - 0.18
+      interp: quadratic
+    radius_y:
+      points:
+      - 0.05
+      - 0.05
+      - 0.048
+      - 0.047
+      - 0.046
+      interp: quadratic
+    level_z:
+      points:
+      - 0.33
+      - 0.39
+      - 0.45
+      - 0.47
+      - 0.49
+      interp: linear
+    range_x:
+      points:
+      - 0.172
+      - 0.178
+      - 0.18
+      - 0.179
+      - 0.178
+      interp: quadratic
+    split_x:
+      points:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.015
+      interp: linear
+    segment:
+    - 5
+    - 5
+    - 2
+    - 2
+    remove_first: true
+  collar:
+    n_horizon_b:
+      points:
+      - 32
+      - 28
+      - 24
+      - 16
+      interp: quadratic
+    n_horizon_f:
+      points:
+      - 32
+      - 27
+      - 20
+      - 8
+      interp: quadratic
+    radius_x:
+      points:
+      - 0.178
+      - 0.153
+      - 0.107
+      - 0.056
+      interp: quadratic
+    radius_yb:
+      points:
+      - 0.046
+      - 0.043
+      - 0.04
+      - 0.03
+      interp: quadratic
+    radius_yf:
+      points:
+      - 0.046
+      - 0.045
+      - 0.043
+      - 0.04
+      interp: quadratic
+    level_z:
+      points:
+      - 0.49
+      - 0.502
+      - 0.52
+      - 0.54
+      interp: quadratic
+    angle_xb:
+      points:
+      - 0.0
+      - 2.0
+      - 6.0
+      - 10.0
+      interp: quadratic
+    angle_xf:
+      points:
+      - 0.0
+      - 5.0
+      - 10.0
+      - 15.0
+      interp: quadratic
+    split_xf:
+      points:
+      - 0.015
+      - 0.022
+      - 0.037
+      - 0.048
+      interp: linear
+    segment:
+    - 1
+    - 2
+    - 3
+    remove_first: true
+  sleeve:
+    n_horizon: 20
+    radius_x:
+      points:
+      - 0.065
+      - 0.06
+      - 0.055
+      - 0.05
+      interp: quadratic
+    radius_y:
+      points:
+      - 0.025
+      - 0.022
+      - 0.02
+      - 0.018
+      interp: quadratic
+    angle_y:
+      points:
+      - 90
+      - 120
+      - 120
+      - 120
+      interp: quadratic
+    level_x:
+      points:
+      - 0.18
+      - 0.28
+      - 0.38
+      - 0.48
+      interp: quadratic
+    level_z:
+      points:
+      - 0.425
+      - 0.36
+      - 0.3
+      - 0.24
+      interp: quadratic
+    segment:
+    - 9
+    - 9
+    - 9
+    remove_first: true
+  transform: tra.scale_matrix(1.2, direction=[0., 0., 1.]) @ tra.scale_matrix(1.2,
+    direction=[0., 1., 0.]) @ tra.scale_matrix(1.2, direction=[1., 0., 0.]) @ tra.translation_matrix([0.,
+    -0.52, .1]) @ tra.rotation_matrix(math.radians(-90), [1., 0., 0.])
+key_points:
+  upper_left: 2754
+  upper_right: 2738
+  lower_left: 20
+  lower_right: 0
+  armpit_left: 780
+  armpit_right: 760
+  sleeve_left: 2021
+  sleeve_right: 2571

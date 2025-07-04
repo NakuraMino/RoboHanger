@@ -1,0 +1,81 @@
+hydra:
+  run:
+    dir: outputs/learn/${train.path.exp_name}/${train.path.version_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+  job:
+    chdir: True
+
+run: 
+  mode: train
+
+data:
+  make:
+    num_worker: 10
+    kp_weight: 0.2
+    kp_smooth_pixel: 10.
+    mask_interp: False
+  common:
+    valid_size: 0.1
+    batch_size: 32
+    num_workers: 16
+    drop_last: True
+  dataset:
+    dtype: ${misc.hardware.dtype}
+    angle_degree_num: ${_load_:'./config/common.yaml', '.angle_degree_num'}
+    distance_num: ${_load_:'./config/common.yaml', '.distance_num'}
+    aug:
+      depth_scale: [0.5, 1.5]
+      tilt: 3e-2
+      noise_std: 5e-3
+      use_conv_on_noise: True
+      random_flip_mask: False
+      flip_mask_prob: 0.05
+
+pl:
+  model:
+    d_unit: 0.1
+    net:
+      channels_list: [8, 16, 32, 64, 128, 256] # [32, 64, 128, 256, 512, 1024] [16, 32, 64, 128, 256, 512] [12, 16, 24, 32, 48, 64]
+  learn:
+    rl:
+      double_q: True
+      discount: 0.5
+      net_target_update_freq: 100
+    valid:
+      plot_batch_idx: [0]
+      plot_dense_predict_num: 8
+    optimizer:
+      name: AdamW
+      cfg:
+        lr: 1e-4
+        weight_decay: 1e-2
+    schedule:
+      name: MultiStepLR
+      cfg:
+        milestones: []
+        gamma: 1.0
+
+train:
+  path:
+    exp_name: funnel
+    version_name: v0
+    data_paths: ["outputs/data"]
+    ckpt:
+  cfg:
+    max_steps: 10000
+    limit_train_batches: 1. # use how much data to train
+    limit_val_batches: 1. # use how much data to validate
+    log_every_n_steps: 50
+    val_check_interval: 500 # How often to evaluate on the validation set
+    ckpt_every_n_steps: 500 # How often to save checkpoint
+
+misc:
+  seed: 0 # ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  step_offset: 0
+  hardware:
+    precision: high # [highest, high, medium]
+    cuda: True
+    gpuids: [0]
+    dtype: float32
+  debug:
+    profiler: Simple
+    model_summary_max_depth: 5

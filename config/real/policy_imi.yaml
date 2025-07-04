@@ -1,0 +1,15 @@
+policy:
+  funnel:
+    ckpt: outputs/learn/0826/fling.ckpt
+    angle_degree_num: ${_load_:'./config/common.yaml', '.angle_degree_num'}
+    distance_num: ${_load_:'./config/common.yaml', '.distance_num'}
+  insert:
+    type: imi
+    ckpt:
+      left: outputs/learn/0903/leftimi.ckpt
+      right: outputs/learn/0903/rightimi.ckpt
+  keypoint:
+    offset: 
+      d: 0.03 # 0.03
+      n: 0.02 # 0.02
+    ckpt: outputs/learn/0826/kp.ckpt

@@ -1,0 +1,44 @@
+insert_policy:
+  global_var:
+    fail: 0.25
+    success: 0.75
+  press:
+    query:
+      per_batch: 64
+      num_iter: 16
+    prob:
+      fail: ${insert_policy.global_var.fail}
+      success: ${insert_policy.global_var.success}
+    heuristic:
+    - [+0.01, +0.01, "eq", 1]
+    - [-0.01, +0.01, "eq", 1]
+    - [-0.01, -0.01, "eq", 1]
+    - [+0.01, -0.01, "eq", 1]
+    - [-0.03, -0.03, "ge", 2]
+  lift:
+    query:
+      per_batch: 64
+      num_iter: 16
+    prob:
+      fail: ${insert_policy.global_var.fail}
+      success: ${insert_policy.global_var.success}
+    heuristic:
+    - [+0.02, +0.02, "ge", 2]
+    - [-0.02, +0.02, "ge", 2]
+    - [-0.02, -0.02, "ge", 2]
+    - [+0.02, -0.02, "ge", 2]
+    - [-0.075, -0.045, -0.075, -0.045, "press"]
+  drag:
+    query:
+      per_batch: 64
+      num_iter: 16
+    prob:
+      fail: ${insert_policy.global_var.fail}
+      success: ${insert_policy.global_var.success}
+    heuristic:
+    - [+0.01, +0.01, "ge", 2]
+    - [-0.01, +0.01, "ge", 2]
+    - [-0.01, -0.01, "ge", 2]
+    - [+0.01, -0.01, "ge", 2]
+    - [+0.03, +0.03, "eq", 0]
+    - [-0.15, -0.12, "hanger"]

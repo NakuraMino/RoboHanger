@@ -1,0 +1,97 @@
+hydra:
+  run:
+    dir: outputs/learn_e2e/${train.path.exp_name}/${train.path.version_name}/${now:%Y-%m-%d}/${now:%H-%M-%S}/
+  job:
+    chdir: True
+
+run: 
+  mode: train
+  endpoint: left
+
+data:
+  common:
+    valid_size: 0.05
+    batch_size: 64
+    num_workers: 16
+    drop_last: True
+  dataset:
+    height: 96
+    width: 128
+    obs_horizon: 4
+    actpred_len: 8
+
+    depth_noise_std: 1e-2
+    dtype: ${misc.hardware.dtype}
+
+pl:
+  model:
+    obs_horizon: ${data.dataset.obs_horizon}
+    actpred_len: ${data.dataset.actpred_len}
+    height: ${data.dataset.height}
+    width: ${data.dataset.width}
+    joints_unit: 1.
+    joints_weight: 10.
+    grip_weight: 0.1
+    net:
+      token_dim: 512
+      obs_enc:
+        name: cnn # cnn, res
+        cfg:
+          res: 
+            output_dim: ${....token_dim}
+          cnn:
+            output_dim: ${....token_dim}
+            channels_list:
+            - 16
+            - 32
+            - 64
+            - 128
+            - 256
+            - 512
+      sta_enc:
+        hidden_dim: [512, 512]
+        output_dim: ${..token_dim}
+      transformer:
+        dim_feedforward: 2048
+        num_encoder_layers: 4
+        num_decoder_layers: 7
+      mlp:
+        hidden_dim: [512, 512]
+  learn:
+    loss: l1_loss # mse_loss
+    optimizer:
+      cfg:
+        lr: 2e-5
+        weight_decay: 1e-2
+    scheduler:
+      name: MultiStepLR
+      cfg:
+        milestones: []
+        gamma: 0.1
+
+train:
+  path:
+    exp_name: insertact
+    version_name: v0
+    data_paths: ["outputs/data"]
+    ckpt:
+  cfg:
+    max_steps: 40000
+    limit_train_batches: 1. # use how much data to train
+    limit_val_batches: 1. # use how much data to validate
+    log_every_n_steps: 50
+    val_check_interval: 500 # How often to evaluate on the validation set
+    ckpt_every_n_steps: 500 # How often to save checkpoint
+    ddp_find_unused_parameters: False
+
+misc:
+  seed: 0 # ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  step_offset: 0
+  hardware:
+    precision: high # [highest, high, medium]
+    cuda: True
+    gpuids: [4, 5, 6, 7]
+    dtype: float32
+  debug:
+    profiler: Simple
+    model_summary_max_depth: 5

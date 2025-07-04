@@ -1,0 +1,58 @@
+hydra:
+  job:
+    chdir: True
+  job_logging:
+    root:
+      level: INFO
+      handlers:
+      - file
+
+output:
+  collect_mode: False
+  total_traj: 5
+  export:
+    base_dir: "."
+    side_view_export_mesh: True
+    obs_export_mesh: ${_eval_:'not ${output.collect_mode}'}
+
+control:
+  skip_init_garment: False
+  state_path:
+
+glb_cfg:
+  seed: ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  batch_size: ${_eval_:'50 if ${output.collect_mode} == True else 4'}
+  default_float: float32
+  default_int: int32
+  torch_device: cuda
+  default_mass: 1.
+  default_inertia: 1.
+  log_verbose: 1
+
+setup:
+  cuda: 0
+  taichi:
+    arch: cuda
+    device_memory_GB: ${_eval_:'20 if ${output.collect_mode} == True else 8'}
+
+    debug: False
+    advanced_optimization: True
+    fast_math: False
+    offline_cache: True
+
+sim_env: ${_load_:'./config/env/sim_env.yaml', '.sim_env'}
+
+insert_gym: ${_load_:'./config/policy/insert/insert_gym.yaml', '.insert_gym'}
+
+insert_policy:
+  ckpt:
+    left: outputs/learn/insert/left/v0/2024-05-14/10-46-01/ckpt/epoch_12_step_8000.ckpt
+    right: outputs/learn/insert/right/v0/2024-05-14/10-46-06/ckpt/epoch_15_step_2000.ckpt
+  interp_mask: False
+
+agent: ${_load_:'./config/agent/galbot_one_agent.yaml', '.agent'}
+
+overwrite:
+  sim_env:
+    misc:
+      enable_timer: ${_eval_:'${output.collect_mode} == False'}  

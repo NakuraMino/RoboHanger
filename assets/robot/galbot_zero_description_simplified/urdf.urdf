@@ -1,0 +1,527 @@
+<?xml version="1.0" ?>
+<robot name="galbot_zero">
+  <link name="base_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0183061749324352 -1.4904125127374741e-05 0.3889560969545909"/>
+      <mass value="18.050059314548466"/>
+      <inertia ixx="5.2105065675650755" ixy="1.5080528506477166e-05" ixz="0.12678607768682798" iyy="5.216644547377941" iyz="7.222389002032876e-05" izz="0.314062926067317"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/base_link.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/base_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="head_yaw_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.06820030179624514 -0.0016321568736614985 0.014101781277411005"/>
+      <mass value="0.25340234743446505"/>
+      <inertia ixx="0.00022498681282429766" ixy="1.0369237623121207e-05" ixz="-0.00025294748651236696" iyy="0.0014848109915466358" iyz="5.3644099558619725e-06" izz="0.0014530346564273057"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/head_yaw_link.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/head_yaw_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="head_pitch_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.04921069607675478 0.010020697612954077 -0.03448113175394436"/>
+      <mass value="0.5229813008677273"/>
+      <inertia ixx="0.004879476325247145" ixy="-0.0008803154082862911" ixz="0.0009116528401589396" iyy="0.005976177224540253" iyz="0.00019983388948636638" izz="0.004910802176394253"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/head_pitch_link.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/head_pitch_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="head_camera_normal_frame">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.055819158770717005 0.03207078399156112 0.004746461876374007"/>
+      <mass value="0.30425847785970905"/>
+      <inertia ixx="0.0005722625171602713" ixy="0.0005435907359242662" ixz="0.00010998543873448614" iyy="0.0014249004679010439" iyz="-4.621729141206071e-05" izz="0.0019375285443785745"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/head_camera_normal_frame.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/head_camera_normal_frame.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_link1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-1.8082315157300337e-06 0.025208113042973962 -0.021109298810283787"/>
+      <mass value="0.5917093465086262"/>
+      <inertia ixx="0.0018992347166249277" ixy="2.1077836600119748e-07" ixz="2.192583347370559e-08" iyy="0.0008212284960277407" iyz="0.00010485210281210829" izz="0.001551442663443567"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link1.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link1.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_link2">
+    <inertial>
+      <origin rpy="0 0 0" xyz="4.7558461529355815e-07 0.011079131869898041 0.07610977792971689"/>
+      <mass value="0.43101965562613537"/>
+      <inertia ixx="0.0038000202916834286" ixy="-1.58475826257549e-08" ixz="-1.0003263590109065e-07" iyy="0.003711363803728775" iyz="-8.620012645509762e-05" izz="0.00036765679170477076"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link2.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_link3">
+    <inertial>
+      <origin rpy="0 0 0" xyz="3.832811574291255e-06 0.027394508803568817 -0.023526756277268142"/>
+      <mass value="0.4298218178574213"/>
+      <inertia ixx="0.0013505754367320647" ixy="1.8676202067386035e-07" ixz="8.928194484080295e-08" iyy="0.0005508059763904943" iyz="0.00013526713148197836" izz="0.0010490255666982865"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link3.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link3.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_link4">
+    <inertial>
+      <origin rpy="0 0 0" xyz="9.284039176688636e-07 0.010580628918160888 0.05951966435727961"/>
+      <mass value="0.28815020388018014"/>
+      <inertia ixx="0.0016863870915502016" ixy="-5.4379594613355064e-08" ixz="7.667178362905002e-08" iyy="0.001631140724678157" iyz="-3.78180343876847e-05" izz="0.0001871714489937342"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link4.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link4.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_link5">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-1.4055029276937529e-06 0.02158323414735352 -0.018030562712124585"/>
+      <mass value="0.2384303117553378"/>
+      <inertia ixx="0.00047258839568550245" ixy="2.3642665029780124e-08" ixz="-2.6560745650521445e-09" iyy="0.00019648263265040843" iyz="4.8868901268907114e-05" izz="0.00037195688659480907"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link5.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link5.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_link6">
+    <inertial>
+      <origin rpy="0 0 0" xyz="3.052200709923092e-06 0.007390878763545298 0.059299691168438196"/>
+      <mass value="0.21768750644272103"/>
+      <inertia ixx="0.0011258894382131573" ixy="-2.5612235697124087e-08" ixz="1.690452142623152e-10" iyy="0.0010980802411959705" iyz="-1.7590339033924608e-05" izz="0.00011568983863346714"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link6.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link6.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_link7">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.005263818360895904 -1.7755223566408122e-06 0.026743016596434337"/>
+      <mass value="0.20924926174961364"/>
+      <inertia ixx="0.0006644430291370977" ixy="-2.497190557421135e-08" ixz="2.2418793970161514e-06" iyy="0.0006780250240530406" iyz="3.689990768682577e-08" izz="0.00018817084861860424"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link7.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_link7.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_arm_camera_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0006853326552020429 -0.01744699456421866 -6.766695560775926e-05"/>
+      <mass value="0.029505595637465905"/>
+      <inertia ixx="3.102168283566917e-05" ixy="7.715963459810774e-08" ixz="2.4993176101446404e-08" iyy="2.1834926546420423e-06" iyz="-3.24878376301454e-08" izz="3.0837700005611334e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_camera_link.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/left_arm_camera_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_gripper_inspire_tcp_frame"/>
+  <link name="right_arm_link1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-1.8082315157300337e-06 0.025208113042973962 -0.021109298810283787"/>
+      <mass value="0.5917093465086262"/>
+      <inertia ixx="0.0018992347166249277" ixy="2.1077836600119748e-07" ixz="2.192583347370559e-08" iyy="0.0008212284960277407" iyz="0.00010485210281210829" izz="0.001551442663443567"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link1.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link1.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_arm_link2">
+    <inertial>
+      <origin rpy="0 0 0" xyz="4.7558461529355815e-07 0.011079131869898041 0.07610977792971689"/>
+      <mass value="0.43101965562613537"/>
+      <inertia ixx="0.0038000202916834286" ixy="-1.58475826257549e-08" ixz="-1.0003263590109065e-07" iyy="0.003711363803728775" iyz="-8.620012645509762e-05" izz="0.00036765679170477076"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link2.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link2.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_arm_link3">
+    <inertial>
+      <origin rpy="0 0 0" xyz="3.832811574291255e-06 0.027394508803568817 -0.023526756277268142"/>
+      <mass value="0.4298218178574213"/>
+      <inertia ixx="0.0013505754367320647" ixy="1.8676202067386035e-07" ixz="8.928194484080295e-08" iyy="0.0005508059763904943" iyz="0.00013526713148197836" izz="0.0010490255666982865"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link3.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link3.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_arm_link4">
+    <inertial>
+      <origin rpy="0 0 0" xyz="9.284039176688636e-07 0.010580628918160888 0.05951966435727961"/>
+      <mass value="0.28815020388018014"/>
+      <inertia ixx="0.0016863870915502016" ixy="-5.4379594613355064e-08" ixz="7.667178362905002e-08" iyy="0.001631140724678157" iyz="-3.78180343876847e-05" izz="0.0001871714489937342"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link4.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link4.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_arm_link5">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-1.4055029276937529e-06 0.02158323414735352 -0.018030562712124585"/>
+      <mass value="0.2384303117553378"/>
+      <inertia ixx="0.00047258839568550245" ixy="2.3642665029780124e-08" ixz="-2.6560745650521445e-09" iyy="0.00019648263265040843" iyz="4.8868901268907114e-05" izz="0.00037195688659480907"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link5.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link5.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_arm_link6">
+    <inertial>
+      <origin rpy="0 0 0" xyz="3.052200709923092e-06 0.007390878763545298 0.059299691168438196"/>
+      <mass value="0.21768750644272103"/>
+      <inertia ixx="0.0011258894382131573" ixy="-2.5612235697124087e-08" ixz="1.690452142623152e-10" iyy="0.0010980802411959705" iyz="-1.7590339033924608e-05" izz="0.00011568983863346714"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link6.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link6.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_arm_link7">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0038195462254072016 -7.034254535710361e-07 0.00796744299173435"/>
+      <mass value="0.28822921408167357"/>
+      <inertia ixx="0.0008225173989634284" ixy="-1.824675207955165e-08" ixz="2.2146476971979186e-06" iyy="0.0008360829251443675" iyz="3.973481452801185e-08" izz="0.00021750581964641912"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link7.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_link7.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_arm_camera_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.001454941481084525 -0.027958236952732404 -5.766658604256752e-05"/>
+      <mass value="0.03451682963405527"/>
+      <inertia ixx="5.0329643664006465e-05" ixy="-1.492819965845876e-06" ixz="2.5030742401913274e-08" iyy="2.404438527014989e-06" iyz="-3.210168913278196e-08" izz="5.021589474604031e-05"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_camera_link.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/right_arm_camera_link.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_gripper_inspire_tcp_frame"/>
+  <joint name="head_yaw_joint" type="revolute">
+    <origin rpy="0.0 -0.0 1.7484555314694994e-07" xyz="0.046999995 1.324455e-08 1.1241"/>
+    <parent link="base_link"/>
+    <child link="head_yaw_link"/>
+    <axis xyz="0.0 0.0 1.0"/>
+    <limit effort="60.0" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="1.5"/>
+  </joint>
+  <joint name="head_pitch_joint" type="revolute">
+    <origin rpy="-1.5707927068048182 -1.5707927068047578 -3.141592653589793" xyz="0.074 -0.0345 0.0146"/>
+    <parent link="head_yaw_link"/>
+    <child link="head_pitch_link"/>
+    <axis xyz="0.0 0.0 1.0"/>
+    <limit effort="60.0" lower="-1.2217304763960306" upper="0.05235987755982988" velocity="1.5"/>
+  </joint>
+  <joint name="head_camera_normal_joint" type="fixed">
+    <origin rpy="-1.5707999467850353 0.0 -1.5707999467850353" xyz="0.091 -0.0566 -0.0035"/>
+    <parent link="head_pitch_link"/>
+    <child link="head_camera_normal_frame"/>
+    <axis xyz="0.0 0.0 0.0"/>
+  </joint>
+  <joint name="left_arm_joint1" type="revolute">
+    <origin rpy="3.141592653589793 -1.5707962830835083 8.742277653736308e-08" xyz="0.0469991 0.29050002 0.9205"/>
+    <parent link="base_link"/>
+    <child link="left_arm_link1"/>
+    <axis xyz="-8.742268e-08 1.0 0.0"/>
+    <limit effort="60.0" lower="-3.1" upper="3.1" velocity="3.14"/>
+  </joint>
+  <joint name="left_arm_joint2" type="revolute">
+    <origin rpy="1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="left_arm_link1"/>
+    <child link="left_arm_link2"/>
+    <axis xyz="0.0 1.0 0.0"/>
+    <limit effort="60.0" lower="-2.268" upper="2.268" velocity="3.14"/>
+  </joint>
+  <joint name="left_arm_joint3" type="revolute">
+    <origin rpy="-1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.256"/>
+    <parent link="left_arm_link2"/>
+    <child link="left_arm_link3"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <limit effort="30.0" lower="-3.1" upper="3.1" velocity="3.92"/>
+  </joint>
+  <joint name="left_arm_joint4" type="revolute">
+    <origin rpy="1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="left_arm_link3"/>
+    <child link="left_arm_link4"/>
+    <axis xyz="0.0 1.0 0.0"/>
+    <limit effort="30.0" lower="-2.355" upper="2.355" velocity="3.92"/>
+  </joint>
+  <joint name="left_arm_joint5" type="revolute">
+    <origin rpy="-1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.21"/>
+    <parent link="left_arm_link4"/>
+    <child link="left_arm_link5"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <limit effort="10.0" lower="-3.1" upper="3.1" velocity="3.92"/>
+  </joint>
+  <joint name="left_arm_joint6" type="revolute">
+    <origin rpy="1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="left_arm_link5"/>
+    <child link="left_arm_link6"/>
+    <axis xyz="0.0 1.0 0.0"/>
+    <limit effort="10.0" lower="-2.233" upper="2.233" velocity="3.92"/>
+  </joint>
+  <joint name="left_arm_joint7" type="revolute">
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.144"/>
+    <parent link="left_arm_link6"/>
+    <child link="left_arm_link7"/>
+    <axis xyz="0.0 0.0 1.0"/>
+    <limit effort="10.0" lower="-6.28" upper="6.28" velocity="3.92"/>
+  </joint>
+  <joint name="left_arm_camera_link_joint" type="fixed">
+    <origin rpy="-0.7853980821208332 -1.5707962649776583 -2.356194490192345" xyz="0.105000004 -0.02 0.01"/>
+    <parent link="left_arm_link7"/>
+    <child link="left_arm_camera_link"/>
+    <axis xyz="-4.371139e-08 -4.371139e-08 1.0"/>
+  </joint>
+  <joint name="left_tcp_joint" type="fixed">
+    <origin rpy="3.1415925723131846 -1.5707962830835047 -8.12766084376659e-08" xyz="6.0107532e-09 -6.5352905e-09 0.14951"/>
+    <parent link="left_arm_link7"/>
+    <child link="left_gripper_inspire_tcp_frame"/>
+    <axis xyz="0.0 0.0 0.0"/>
+  </joint>
+  <joint name="right_arm_joint1" type="revolute">
+    <origin rpy="-7.239980256035941e-06 -1.5707962830835083 8.742277653736308e-08" xyz="0.04699915 -0.2905 0.9205"/>
+    <parent link="base_link"/>
+    <child link="right_arm_link1"/>
+    <axis xyz="-7.1525574e-06 -1.0 3.164696e-13"/>
+    <limit effort="100.0" lower="-3.107" upper="3.107" velocity="1.0"/>
+  </joint>
+  <joint name="right_arm_joint2" type="revolute">
+    <origin rpy="1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="right_arm_link1"/>
+    <child link="right_arm_link2"/>
+    <axis xyz="0.0 1.0 0.0"/>
+    <limit effort="100.0" lower="-2.269" upper="2.269" velocity="1.0"/>
+  </joint>
+  <joint name="right_arm_joint3" type="revolute">
+    <origin rpy="-1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.256"/>
+    <parent link="right_arm_link2"/>
+    <child link="right_arm_link3"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <limit effort="100.0" lower="-3.107" upper="3.107" velocity="1.0"/>
+  </joint>
+  <joint name="right_arm_joint4" type="revolute">
+    <origin rpy="1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="right_arm_link3"/>
+    <child link="right_arm_link4"/>
+    <axis xyz="0.0 1.0 0.0"/>
+    <limit effort="100.0" lower="-2.356" upper="2.356" velocity="1.0"/>
+  </joint>
+  <joint name="right_arm_joint5" type="revolute">
+    <origin rpy="-1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.21"/>
+    <parent link="right_arm_link4"/>
+    <child link="right_arm_link5"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <limit effort="100.0" lower="-3.107" upper="3.107" velocity="1.0"/>
+  </joint>
+  <joint name="right_arm_joint6" type="revolute">
+    <origin rpy="1.5707999467850353 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="right_arm_link5"/>
+    <child link="right_arm_link6"/>
+    <axis xyz="0.0 1.0 0.0"/>
+    <limit effort="100.0" lower="-2.234" upper="2.234" velocity="1.0"/>
+  </joint>
+  <joint name="right_arm_joint7" type="revolute">
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.1725"/>
+    <parent link="right_arm_link6"/>
+    <child link="right_arm_link7"/>
+    <axis xyz="0.0 0.0 1.0"/>
+    <limit effort="100.0" lower="-6.28" upper="6.28" velocity="1.0"/>
+  </joint>
+  <joint name="right_arm_camera_link_joint" type="fixed">
+    <origin rpy="-0.7853980821208332 -1.5707962649776583 -2.356194490192345" xyz="0.105000004 -0.02 0.01"/>
+    <parent link="right_arm_link7"/>
+    <child link="right_arm_camera_link"/>
+    <axis xyz="-4.371139e-08 -4.371139e-08 1.0"/>
+  </joint>
+  <joint name="right_tcp_joint" type="fixed">
+    <origin rpy="3.1415925723131846 -1.5707962830835047 -8.12766084376659e-08" xyz="6.0107532e-09 -6.5352905e-09 0.14951"/>
+    <parent link="right_arm_link7"/>
+    <child link="right_gripper_inspire_tcp_frame"/>
+    <axis xyz="0.0 0.0 0.0"/>
+  </joint>
+</robot>

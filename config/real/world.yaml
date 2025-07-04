@@ -1,0 +1,460 @@
+table_macro: # need to modify as long as the table height changes
+  leg_joint1: 0.2520
+  leg_joint2: 0.5295
+  leg_joint3: 0.2776
+  table_height: 0.455
+  obs_leg_joint1: 0.2520 # 0.45
+  obs_leg_joint2: 0.5295 # 1.10
+  obs_leg_joint3: 0.2776 # 0.90
+
+world:
+  global_var:
+    offset:
+      left:
+        xyz: [0.00, 0.00, -0.025]
+      right:
+        xyz: [0.02, 0.00, -0.040]
+    offset_e2e:
+      left:
+        xyz: [0.0, 0.0, 0.0]
+      right:
+        xyz: [0.0, 0.0, 0.0]
+  obj:
+    robot:
+      urdf_path: assets/robot/galbot_one_charlie/urdf_nomtl.urdf # urdf: assets/robot/galbot_one_description_0521/galbot_one_real.urdf
+      mesh_dir: assets/robot/galbot_one_charlie/meshes # urdf: assets/robot/galbot_one_description_0521/meshes
+      grasp:
+        left:
+          link: left_gripper_tcp_link
+          joints:
+          - left_arm_joint1
+          - left_arm_joint2
+          - left_arm_joint3
+          - left_arm_joint4
+          - left_arm_joint5
+          - left_arm_joint6
+          - left_arm_joint7
+          - left_gripper_l1_joint
+          - left_gripper_l2_joint
+          - left_gripper_l3_joint
+          - left_gripper_r1_joint
+          - left_gripper_r2_joint
+          - left_gripper_r3_joint
+          open:
+            left_gripper_l1_joint: 0.7
+            left_gripper_l2_joint: 0.7
+            left_gripper_l3_joint: 0.7
+            left_gripper_r1_joint: 0.7
+            left_gripper_r2_joint: 0.7
+            left_gripper_r3_joint: 0.7
+          close:
+            left_gripper_l1_joint: 0.0
+            left_gripper_l2_joint: 0.0
+            left_gripper_l3_joint: 0.0
+            left_gripper_r1_joint: 0.0
+            left_gripper_r2_joint: 0.0
+            left_gripper_r3_joint: 0.0
+        right:
+          link: right_gripper_tcp_link
+          joints:
+          - right_arm_joint1
+          - right_arm_joint2
+          - right_arm_joint3
+          - right_arm_joint4
+          - right_arm_joint5
+          - right_arm_joint6
+          - right_arm_joint7
+          - right_gripper_l1_joint
+          - right_gripper_l2_joint
+          - right_gripper_l3_joint
+          - right_gripper_r1_joint
+          - right_gripper_r2_joint
+          - right_gripper_r3_joint
+          open:
+            right_gripper_l1_joint: 0.7
+            right_gripper_l2_joint: 0.7
+            right_gripper_l3_joint: 0.7
+            right_gripper_r1_joint: 0.7
+            right_gripper_r2_joint: 0.7
+            right_gripper_r3_joint: 0.7
+          close:
+            right_gripper_l1_joint: 0.0
+            right_gripper_l2_joint: 0.0
+            right_gripper_l3_joint: 0.0
+            right_gripper_r1_joint: 0.0
+            right_gripper_r2_joint: 0.0
+            right_gripper_r3_joint: 0.0
+      init:
+        base:
+          name: base_link
+          pos: [0.0, -0.35, 0.0, 0.70710678, 0., 0., 0.70710678]
+        qpos:
+          leg_joint1: ${table_macro.leg_joint1}
+          leg_joint2: ${table_macro.leg_joint2}
+          leg_joint3: ${table_macro.leg_joint3}
+          leg_joint4: 0.
+
+          left_arm_joint1: 0.0
+          left_arm_joint2: +0.4
+          left_arm_joint3: -1.5
+          left_arm_joint4: -1.5
+          left_arm_joint5: 0.0
+          left_arm_joint6: +0.5
+          left_arm_joint7: -0.5
+          left_gripper_l1_joint: 0.7
+          left_gripper_l2_joint: 0.7
+          left_gripper_l3_joint: 0.7
+          left_gripper_r1_joint: 0.7
+          left_gripper_r2_joint: 0.7
+          left_gripper_r3_joint: 0.7
+
+          right_arm_joint1: 0.0
+          right_arm_joint2: -0.4
+          right_arm_joint3: +1.5
+          right_arm_joint4: +1.5
+          right_arm_joint5: 0.0
+          right_arm_joint6: -0.5
+          right_arm_joint7: +0.5
+          right_gripper_l1_joint: 0.7
+          right_gripper_l2_joint: 0.7
+          right_gripper_l3_joint: 0.7
+          right_gripper_r1_joint: 0.7
+          right_gripper_r2_joint: 0.7
+          right_gripper_r3_joint: 0.7
+      ik:
+        solver:
+          max_iter: 128
+          fix_joint:
+          - leg_joint1
+          - leg_joint2
+          - leg_joint3
+          - leg_joint4
+        init:
+          left:
+            left_arm_joint1: 0.0
+            left_arm_joint2: +0.4
+            left_arm_joint3: -1.5
+            left_arm_joint4: -1.5
+            left_arm_joint5: 0.0
+            left_arm_joint6: +0.5
+            left_arm_joint7: -0.5
+          right:
+            right_arm_joint1: 0.0
+            right_arm_joint2: -0.4
+            right_arm_joint3: +1.5
+            right_arm_joint4: +1.5
+            right_arm_joint5: 0.0
+            right_arm_joint6: -0.5
+            right_arm_joint7: +0.5
+      e2e:
+        joints:
+        - left_arm_joint1
+        - left_arm_joint2
+        - left_arm_joint3
+        - left_arm_joint4
+        - left_arm_joint5
+        - left_arm_joint6
+        - left_arm_joint7
+        - right_arm_joint1
+        - right_arm_joint2
+        - right_arm_joint3
+        - right_arm_joint4
+        - right_arm_joint5
+        - right_arm_joint6
+        - right_arm_joint7
+        - leg_joint1
+        - leg_joint2
+        - leg_joint3
+        - leg_joint4
+        joints_net_input_offset:
+          leg_joint3: ${_eval_:'0.7 - ${table_macro.leg_joint3}'}
+          leg_joint4: 0
+        joints_net_input_overwrite:
+          leg_joint1: 0.5
+          leg_joint2: 1.2
+    table:
+      height: ${table_macro.table_height}
+    hanger:
+      mesh_path: assets/hanger/hanger.obj
+      sample_num: 512
+      translate_xy: [0.0, +0.01]
+  obs:
+    reproject:
+      camera_z_sim: ${_load_:'./config/agent/galbot_one_agent.yaml', '.agent.policy_obs.reproject.camera_pose[2]'}
+      table_z_sim: ${_load_:'./config/env/sim_env.yaml', '.sim_env.asset.table.pos[2]'}
+      delta_depth: ${_eval_:'${.camera_z_sim} - ${.table_z_sim}'} # in sim: 1.82 = 2.50 (in galbot_one_agent.yaml) - 0.68 (in sim_env.yaml)
+      # max_depth: ${_eval_:'${.delta_depth} + 0.15'}
+      input_max_y: 0.78
+      input_min_y: 0.10
+      input_max_x_abs: 0.75
+      camera_prop:
+        height: 128
+        width: 128
+        fx: 256.
+        fy: 256.
+        cx: 64.
+        cy: 64.
+        skew: 0.
+      camera_pose:
+      - 0.0
+      - 0.5
+      - ${_eval_:'${..delta_depth} + ${table_macro.table_height}'}
+      - 0.5
+      - -0.5
+      - 0.5
+      - 0.5
+    overwrite_reproject_depth: null # 1.52 # TODO set this to `null` to use the real obs
+    neckline_prompt:
+      pos:
+      - - 0.00
+        - 0.475
+        - ${table_macro.table_height}
+      neg:
+      - - -0.05
+        - 0.36
+        - ${table_macro.table_height}
+      - - +0.05
+        - 0.36
+        - ${table_macro.table_height}
+      visualize_prompt: True
+      y_offset_list: [-0.01, 0.00, -0.005, -0.015, -0.02, -0.025, -0.035, -0.045, -0.055]
+      desired_pixel_cnt_min: 500
+      desired_pixel_cnt_max: 5000
+    obs_leg_joint:
+      leg_joint1: ${table_macro.obs_leg_joint1}
+      leg_joint2: ${table_macro.obs_leg_joint2}
+      leg_joint3: ${table_macro.obs_leg_joint3}
+      leg_joint4: 0.
+  primitive:
+    parameter:
+      overwrite_h_lower:
+        offset: 0.
+        hrange: [0., 0.04]
+    fling:
+      action_space:
+        center: [0.0, 0.5]
+        radius: 0.25
+        distance: [0.20, 0.40]
+        angle_degree: [-90., +90.]
+      max_pick_points_h_lower_offset: 0.03
+      pick_points:
+        leg:
+          leg_joint3:
+            coeff: 1.2 # 1.5
+        h_upper: 0.10
+        h_lower: 0.015 # h_lower = 0.015 + depth
+        h_later: 0.08
+        time: [4., 2., 2.]
+      lift_up:
+        x: 
+          scale: 1.2
+        y: 0.35
+        h: 0.70
+        time: 1. 
+      fling_forwards:
+      - leg:
+        y: 0.70
+        h: 0.70
+        time: 0.60 # 0.40
+        wait: 0.10 # 0.15
+      - leg:
+        y: 0.55 # 0.60
+        h: 0.30 # 0.20
+        time: 0.40 # 0.50
+      - leg:
+        y: 0.35
+        h: 0.08
+        time: 0.40 # 0.60
+      - leg:
+        y: 0.28 # 0.30
+        h: 0.04
+        time: 0.30
+      move_to_h:
+        left:
+          xyh: [-0.10, 0.00, 0.20]
+        right:
+          xyh: [+0.10, 0.00, 0.20]
+        time: 2.
+    insert:
+      lift:
+        action_space:
+          min: [-0.15, 0.35]
+          max: [+0.05, 0.55]
+        pick_points:
+          leg:
+            leg_joint3:
+              val: ${_eval_:'0.4 + ${table_macro.leg_joint3}'}
+            leg_joint4:
+              val: 0.2
+          h_upper: 0.10
+          h_lower: 0.025
+          h_later: 0.070
+          time: [4., 2., 2.]
+        pick_points_rpy: [0.7853981633974483, 0, -1.0471975511965976]
+      press:
+        offset: [0.00, 0.00]
+        action_space:
+          min: [-0.06, 0.42] # hanger origin: [+0.011, 0.611]
+          max: [+0.00, 0.54] # hanger origin: [+0.131, 0.731]
+        hanger_rpy:
+          absolute: [0.0, 0.0, 0.7853981633974483]
+          ee_tcp: [0.7853981633974483, 0.0, 0.7853981633974483]
+        press:
+          leg: ${...lift.pick_points.leg}
+          h_upper: 0.20
+          h_inter: 0.08
+          h_lower: 0.03
+          time: [2., 1., 1.]
+        insert:
+          leg: ${...lift.pick_points.leg}
+          xy: [-0.12, -0.12] # [-0.124, -0.125] # [-0.113, +0.007] x [0.486, 0.606]
+          xyz_delta_left: [-0.2, 0.0, 0.1]
+          h: 0.03
+          time: [1., 1., 1.]
+        move_to_h:
+          left:
+            xyh: [-0.10, -0.05, 0.20]
+          right:
+            xyh: [+0.10, +0.05, 0.20]
+          time: 2.
+      drag:
+        offset: [0.01, -0.02]
+        action_space:
+          min: [-0.05, 0.40]
+          max: [+0.15, 0.55]
+        hanger_rpy:
+          absolute: [0.0, 0.0, 0.7853981633974483]
+          # ee_tcp: [0.0, 0.0, -2.356194490192345]
+          ee_tcp: [0.0, 0.0, 0.7853981633974483]
+        regrasp:
+          offset: [0.00, -0.02]
+          leg:
+            leg_joint3: 
+              val: ${_eval_:'0.4 + ${table_macro.leg_joint3}'}
+            leg_joint4: 
+              val: -0.8
+          h_upper: 0.10
+          h_inter: 0.05 # 0.04
+          h_lower: 0.03 # 0.01
+          h_hanger_upper: 0.05
+          time: [1., 1., 1., 1.]
+        pick_points:
+          leg: ${..regrasp.leg}
+          h_upper: 0.10
+          h_lower: 0.03
+          h_later: 0.06 # 0.03
+          time: [4., 2., 2.]
+        drag:
+        - leg: ${...regrasp.leg}
+          right:
+            xyh: [0.13, 0.01, 0.090] # [0.10, 0.00]
+          time: 2.
+        - leg: ${...regrasp.leg}
+          right:
+            xyh: [0.11, 0.03, 0.075] # [0.08, 0.06]
+          time: 1.
+      rotate:
+        action_space:
+          min: [+0.09, 0.35] # [-0.095, 0.435]
+          max: [+0.19, 0.45] # [+0.005, 0.535]
+        hanger_rpy:
+          absolute: [0.0, 0.0, 0.0]
+          ee_tcp: [0.0, 0.0, 0.0]
+        rotate:
+          leg: ${...drag.regrasp.leg}
+          h: 0.05
+          time: 3.
+        pull:
+          leg: ${...drag.regrasp.leg}
+          hanger:
+            x: 0.00
+            y: 0.60
+          mid_point: [0.10, 0.00, 0.00]
+          start:
+            x: -0.06
+            y: -0.18
+          end:
+            x: -0.14
+            y: -0.26
+          h_upper: 0.10
+          h_lower: 0.02
+          time: 3.
+    keypoint:
+      action_space:
+        dist_range: [0.14, 0.22]
+        xyc: [0.0, 0.5]
+        radius_max: 0.30
+      exchange_hand:
+        pick_points:
+          leg:
+            leg_joint3:
+              coeff: 1.2 # 1.5
+            leg_joint4:
+              coeff: -1.8
+          h_upper: 0.10
+          h_lower: 0.02
+          h_later: 0.06
+          time: [4., 2., 2.]
+        move_to_target:
+          x_upper_abs: 0.4
+          h_upper: 0.65
+          h_put: 0.02
+          time: [2., 1., 1.]
+        move_to_h:
+          left:
+            xyh: [-0.15, 0.00, 0.15]
+          right:
+            xyh: [+0.15, 0.00, 0.15]
+          time: 4.
+      fling: 
+        pick_points: ${..exchange_hand.pick_points}
+        lift_up:
+          x: 
+            scale: 1.05
+          y: 0.65
+          h: 0.65 # 0.75
+          time: 1. 
+        fling_forwards:
+        - leg:
+          x_scale: 0.8
+          y: 0.10
+          h: 0.65 # 0.75
+          time: 0.7
+        - leg:
+          x_scale: 0.8
+          y: 0.30
+          h: 0.25 # 0.30
+          time: 0.7
+        - leg:
+          x_scale: 0.95
+          y: 0.51
+          h: 0.04
+          time: 0.6
+        move_to_h: ${...fling.move_to_h}
+    find_hanger:
+      hanger_pc_path: null # assets/hanger/hanger_pc.ply # TODO set this to `null` to use the real obs
+      pc_num: 256
+      leg:
+        leg_joint3:
+          coeff: 1.0
+      h_upper: 0.08
+      h_lower: 0.02
+      xyh_later: [0.70, 0.40, 0.60]
+      time: [2., 1., 2.]
+    hanger_on_rack:
+      leg:
+        leg_joint4:
+          val: 1.57
+      xyh_l: [-0.50, 0.20, 0.70]
+      rpy: [1.57, 0., 0.]
+      time: 5.
+  utils:
+    visualize: 
+      use: True
+      default_time: 1.
+      viewer:
+        timestep: 0.10
+        rt_samples_per_pixel: 4 # increase this number to reduce noise
+        rt_use_denoiser: True # For CUDA Version > 522, set this to be True
+        resolution: [1680, 1440]
+    show_window: True

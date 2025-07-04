@@ -1,0 +1,53 @@
+misc:
+  hardware:
+    cuda: True
+    gpuids: 0
+
+path:
+  base_dir: "/home/xiaowenbo/Personal/projects/robohang0/robohang0/assets/hanger"
+  log_dir: 
+
+model:
+  name: "HangerNet_cls"
+  checkpoint:
+  parameters:
+    normal_channel: False
+    output_dim: 9
+    num_points: 512
+
+dataset:
+  name: "outputs"
+
+dataloader:
+  name: "HangerNetDataLoader"
+  train:
+    batch_size: 128
+    num_workers: 10
+    shuffle: True
+  valid:
+    batch_size: 128
+    num_workers: 10
+    shuffle: False
+  test:
+    batch_size: 128
+    num_workers: 10
+    shuffle: False
+  predict:
+    batch_size: 128
+    num_workers: 10
+    shuffle: False
+
+train:
+  max_epochs: 400
+  ckpt_every_n_epochs: 1
+  optimizer: 
+    name: "Adam"
+    learning_rate: 0.001
+    decay_rate: 0.0001
+    momentum: 0.9
+  scheduler:
+    step_size: 20
+    gamma: 0.8
+
+run:
+  mode: "train"

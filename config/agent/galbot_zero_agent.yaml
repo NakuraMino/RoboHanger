@@ -1,0 +1,177 @@
+agent:
+  cls: GalbotZeroAgent
+  init:
+    base:
+      name: base_link
+      pos: [0.0, 0.0, 0.0, 0.70710678, 0., 0., 0.70710678]
+    qpos:
+      head_yaw_joint: 0.
+      head_pitch_joint: -0.7853981633974483
+
+      left_arm_joint1: +0.00
+      left_arm_joint2: +1.00
+      left_arm_joint3: -1.00
+      left_arm_joint4: -1.00
+      left_arm_joint5: +0.50
+      left_arm_joint6: -1.00
+      left_arm_joint7: 0.
+
+      right_arm_joint1: -0.00
+      right_arm_joint2: +1.00
+      right_arm_joint3: +1.00
+      right_arm_joint4: -1.00
+      right_arm_joint5: -0.50
+      right_arm_joint6: -1.00
+      right_arm_joint7: 0.
+
+      left_gripper_inspire_left_joint_1: 0.
+      left_gripper_inspire_right_joint_1: 0.
+      right_gripper_inspire_left_joint_1: 0.
+      right_gripper_inspire_right_joint_1: 0.
+
+  grasp:
+    left:
+      link: left_gripper_inspire_tcp_frame
+      joints:
+      - left_arm_joint1
+      - left_arm_joint2
+      - left_arm_joint3
+      - left_arm_joint4
+      - left_arm_joint5
+      - left_arm_joint6
+      - left_arm_joint7
+    right:
+      link: right_gripper_inspire_tcp_frame
+      joints:
+      - right_arm_joint1
+      - right_arm_joint2
+      - right_arm_joint3
+      - right_arm_joint4
+      - right_arm_joint5
+      - right_arm_joint6
+      - right_arm_joint7
+
+  action_rpy:
+    fling:
+      pick_points:
+        y_threshold: 0.4
+        near: 
+          left:  [0.5235987755982988, 0.0, -1.2566370614359172]
+          right: [0.5235987755982988, 0.0, +1.2566370614359172]
+        far: 
+          left:  [0.7853981633974483, 0.0, -0.7853981633974483]
+          right: [0.7853981633974483, 0.0, +0.7853981633974483]
+      lift_up: 
+        left:  [1.5707963267948966, 0.0, -0.5235987755982988]
+        right: [1.5707963267948966, 0.0, +0.5235987755982988]
+      fling_backward: ${.lift_up}
+      fling_forward: 
+        left:  [0.6283185307179586, 0.0, -0.5235987755982988]
+        right: [0.6283185307179586, 0.0, +0.5235987755982988]
+      reset: ${.fling_forward}
+    pick_place: 
+      pick_points:
+        left:  [0.7853981633974483, 0.0, -1.0471975511965976]
+        right: [0.7853981633974483, 0.0, +1.0471975511965976]
+      reset: ${.pick_points}
+
+  inverse_kinematics:
+    solver:
+      max_iter: 64
+    init:
+      fling:
+        pick_points:
+          left:
+            left_arm_joint1: +0.50
+            left_arm_joint2: +1.57
+            left_arm_joint3: -1.57
+            left_arm_joint4: -1.00
+            left_arm_joint6: -1.00
+          right:
+            right_arm_joint1: -0.50
+            right_arm_joint2: +1.57
+            right_arm_joint3: +1.57
+            right_arm_joint4: -1.00
+            right_arm_joint6: -1.00
+        lift_up: ${.pick_points}
+        fling_backward: ${.pick_points}
+        fling_forward: ${.pick_points}
+        reset: ${.pick_points}
+      pick_place:
+        pick_points: ${..fling.pick_points}
+        reset: ${..fling.pick_points}
+
+  camera:
+    prop:
+      # small: # d415 p[317.029 239.639] f[606.946 606.588] @ 640x480
+      #   height: 128
+      #   width: 192
+      #   fx: 159.2
+      #   fy: 159.2
+      #   cx: 95.1
+      #   cy: 61.2
+      #   skew: 0.
+      small: # kinect
+        height: 512
+        width: 512
+        fx: 128.
+        fy: 128.
+        cx: 256.
+        cy: 256.
+        skew: 0.
+      medium: # side view
+        height: 360
+        width: 540
+        fx: 600.0
+        fy: 600.0
+        cx: 270.0
+        cy: 180.0
+        skew: 0.
+      large: # side view
+        height: 720
+        width: 1080
+        fx: 1200.0
+        fy: 1200.0
+        cx: 540.0
+        cy: 360.0
+        skew: 0.
+    top:
+      link: head_camera_normal_frame
+      origin: 
+        xyz: [0., 0., 0.]
+        rpy: [0., 0., 0.]
+    left:
+      link: left_arm_camera_link
+      origin: 
+        xyz: [0., 0., 0.]
+        rpy: [0., 0., 0.]
+    right:
+      link: right_arm_camera_link
+      origin: 
+        xyz: [0., 0., 0.]
+        rpy: [0., 0., 0.]
+    side:
+      pos: [-1.5, +2.0, +3.0, 0.85355339, 0.14644661, 0.35355339, -0.35355339]
+    direct: 
+      pos: [0., 0.30, 1.25, 0.65327975, -0.27059975, 0.27059635, 0.65328321] # rpy=(0., pi/4, pi/2)
+    rand:
+      prop:
+        fx: 8.
+        fy: 8.
+        cx: 16.
+        cy: 16.
+      pose:
+        xyz: 0.03
+        rot: 0.03
+  
+  policy_obs:
+    reproject:
+      camera_prop:
+        height: 64
+        width: 64
+        fx: 128.
+        fy: 128.
+        cx: 32.
+        cy: 32.
+        skew: 0.
+      camera_pose: [0., 0.5, 2., 0.5, -0.5, 0.5, 0.5]

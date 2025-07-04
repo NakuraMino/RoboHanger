@@ -1,0 +1,45 @@
+hydra:
+  job:
+    chdir: True
+  job_logging:
+    root:
+      level: INFO
+      handlers:
+      - file
+      - console
+
+glb_cfg:
+  seed: ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
+  default_float: float32
+  default_int: int32
+  torch_device: cuda
+
+setup:
+  cuda: 0
+  taichi:
+    arch: cuda
+    device_memory_GB: 2
+
+    debug: False
+    advanced_optimization: True
+    fast_math: False
+    offline_cache: True
+
+realapi: ${_load_:'./config/real/realapi.yaml', '.realapi'}
+
+world: ${_load_:'./config/real/world.yaml', '.world'}
+
+policy: 
+  type: qf # qf, imi, fix, act
+  qf: ${_load_:'./config/real/policy_qf.yaml', '.policy'}
+  imi: ${_load_:'./config/real/policy_imi.yaml', '.policy'}
+  fix: ${_load_:'./config/real/policy_fix.yaml', '.policy'}
+  act: ${_load_:'./config/real/policy_act.yaml', '.policy'}
+
+hanger_idx: 0
+
+overwrite:
+  world:
+    utils:
+      visualize: 
+        use: True # example

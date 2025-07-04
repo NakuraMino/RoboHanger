@@ -1,0 +1,3 @@
+[submodule "external/batch_urdf"]
+	path = external/batch_urdf
+	url = https://gitee.com/chen01yx/batch_urdf.git

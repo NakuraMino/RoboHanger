@@ -1,0 +1,85 @@
+body:
+  n_horizon: 40
+  radius_x: 
+    points: [0.170, 0.170, 0.170, 0.172]
+    interp: quadratic
+  radius_y: 
+    points: [0.050, 0.050, 0.050, 0.050]
+    interp: quadratic
+  level_z: 
+    points: [0.00, 0.11, 0.22, 0.33]
+  segment: [6, 6, 7]
+
+chest:
+  n_horizon: 23
+  radius_x: 
+    points: [0.172, 0.190, 0.210, 0.195, 0.180]
+    interp: quadratic
+  radius_y: 
+    points: [0.050, 0.050, 0.048, 0.047, 0.046]
+    interp: quadratic
+  level_z:
+    points: [0.330, 0.390, 0.450, 0.470, 0.490]
+    interp: linear
+  range_x: 
+    points: [0.172, 0.178, 0.180, 0.179, 0.178]
+    interp: quadratic
+  split_x:
+    points: [0.000, 0.000, 0.000, 0.000, 0.000]
+    interp: linear
+  segment: [5, 5, 2, 2]
+  remove_first: True
+
+collar:
+  n_horizon_b:
+    points: [32, 28, 24, 16]
+    interp: quadratic
+  n_horizon_f:
+    points: [32, 27, 20, 8]
+    interp: quadratic
+  radius_x: 
+    points: [0.178, 0.155, 0.110, 0.060]
+    interp: quadratic
+  radius_yb: 
+    points: [0.046, 0.043, 0.040, 0.030]
+    interp: quadratic
+  radius_yf:
+    points: [0.046, 0.045, 0.043, 0.040]
+    interp: quadratic
+  level_z:
+    points: [0.490, 0.502, 0.520, 0.540]
+    interp: quadratic
+  angle_xb:
+    points: [0., 2., 6., 10.]
+    interp: quadratic
+  angle_xf:
+    points: [0., 5., 10., 15.]
+    interp: quadratic
+  split_xf:
+    points: [0.000, 0.018, 0.036, 0.052]
+    interp: linear
+  segment: [1, 2, 3]
+  remove_first: True
+
+sleeve:
+  n_horizon: 20
+  radius_x: 
+    points: [0.065, 0.060, 0.055, 0.050]
+    interp: quadratic
+  radius_y: 
+    points: [0.025, 0.022, 0.020, 0.018]
+    interp: quadratic
+  angle_y: 
+    points: [90, 120, 120, 120]
+    interp: quadratic
+  level_x:
+    points: [0.180, 0.280, 0.380, 0.480]
+    interp: quadratic
+  level_z:
+    points: [0.425, 0.360, 0.300, 0.240]
+    interp: quadratic
+  segment: [9, 9, 9]
+  remove_first: True
+
+transform:
+  "tra.translation_matrix([0., -.52, .1]) @ tra.rotation_matrix(math.radians(-90), [1., 0., 0.])"

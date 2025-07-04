@@ -1,0 +1,5 @@
+funnel_policy:
+  ckpt: outputs/learn/funnel/v0/2024-05-17/17-16-53/ckpt/epoch_5_step_10000.ckpt
+  angle_degree_num: ${_load_:'./config/common.yaml', '.angle_degree_num'}
+  distance_num: ${_load_:'./config/common.yaml', '.distance_num'}
+  interp_mask: False
