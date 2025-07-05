@@ -486,9 +486,9 @@ class SapienRenderer:
 
 
 def main():
-    test_path = "/mnt/disk1/yuxingchen/research/robohang/outputs/test/2024-03-04/20-14-34"
+    test_path = "outputs/test/2024-03-04/20-14-34"
     sapien_renderer = SapienRenderer(
-        robot_urdf="/mnt/disk1/yuxingchen/research/robohang/assets/robot/galbot_zero_description/galbot_zero_two_grippers.urdf"
+        robot_urdf="assets/robot/galbot_zero_description/galbot_zero_two_grippers.urdf"
     )
     sapien_renderer.set_camera_pos(
         xyz=np.array([-4., -4., 6.]), 
