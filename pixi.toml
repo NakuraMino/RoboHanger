@@ -1,0 +1,37 @@
+[project]
+name = "robohanger"
+authors = ["Mino Nakura <minorunakura@gmail.com>"]
+version = "0.0.0"
+description = "RoboHanger"
+channels = ["nvidia", "pytorch", "conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = "3.10.*"
+pip = "*"
+numpy = "*"
+tqdm = "*"
+tensorboard = "*"
+imageio = "*"
+poppler = "*"                # needed by pdf2image
+pytorch = "*"                # PyTorch
+torchvision = "*"
+pytorch-cuda = "12.1.*"
+
+[pypi-dependencies]
+opencv-python = "*" 
+open3d = "*"
+taichi = "==1.6.0"
+sapien = "==2.2.*"
+lightning = "*"
+hydra-core = "*"
+pdf2image = "*"
+pynput = "*"
+torch_tb_profiler = "*"
+
+# Local editable installs
+robohang = { path = ".", editable = true }
+batch-urdf = { path = "external/batch_urdf", editable = true }
+
+[tasks]
+py = "python -V"

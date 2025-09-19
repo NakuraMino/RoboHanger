@@ -22,3 +22,6 @@ cloth_dataset**
 
 # viewer
 imgui.ini
+# pixi environments
+.pixi
+*.egg-info
