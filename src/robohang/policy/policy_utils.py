@@ -1,6 +1,4 @@
 import logging
-logger = logging.getLogger(__name__)
-
 import taichi as ti
 
 import os
@@ -26,6 +24,8 @@ import robohang.common.utils as utils
 from robohang.env.sim_env import SimEnv
 from robohang.env.sapien_renderer import CameraProperty, model_matrix_np, camera_pose_to_matrix, camera_property_to_intrinsics_matrix
 from robohang.agent.base_agent import BaseAgent
+
+logger = logging.getLogger(__name__)
 
 
 class ObservationExporter:
@@ -56,6 +56,8 @@ class ObservationExporter:
         self._batch_zfill_len = len(str(self._sim_env.batch_size - 1))
 
         self._step_idx = 0
+        self._dense_step_idx = 0
+        self._dense_step_zfill_len = 8
         self._side_idx = 0
         self._traj_idx = 0
 
@@ -82,6 +84,12 @@ class ObservationExporter:
     def get_step_str(self):
         return self._get_step_str()
 
+    def _get_dense_step_str(self):
+        return str(self._dense_step_idx).zfill(self._dense_step_zfill_len)
+
+    def get_dense_step_str(self):
+        return self._get_dense_step_str()
+
     def _get_policy_obs_base_dir(self, batch_idx: int):
         return os.path.join(
             self._get_trajectory_path(),
@@ -99,6 +107,7 @@ class ObservationExporter:
         result, mask_str_to_idx, camera_info = self._agent.get_obs("direct", "small", batch_idx, True, pos=self._agent.direct_obs)
         logger.info(f"camera_info:{camera_info}")
         os.makedirs(os.path.join(base_dir, "color"), exist_ok=True)
+        print('MINOOO base_dir', base_dir)
         Image.fromarray(result["rgba"]).save(os.path.join(base_dir, "color", f"{step_str}.png"))
 
         os.makedirs(os.path.join(base_dir, "mesh_norobot"), exist_ok=True)
@@ -170,6 +179,38 @@ class ObservationExporter:
         for batch_idx in range(self._sim_env.batch_size):
             self._export_policy_obs(batch_idx)
         self._step_idx += 1
+
+    def _export_policy_rgb_only(self, batch_idx: int, subfolder: str = "color_dense", randomize: bool = False):
+        """
+        Export only the RGB image for the given batch to a dense timeline folder.
+        This is lightweight and suitable for per-timestep capture.
+        """
+        base_dir = self._get_policy_obs_base_dir(batch_idx)
+        step_str = self._get_dense_step_str()
+
+        result, _, _ = self._agent.get_obs("direct", "small", batch_idx, randomize, pos=self._agent.direct_obs)
+        out_dir = os.path.join(base_dir, subfolder)
+        os.makedirs(out_dir, exist_ok=True)
+        Image.fromarray(result["rgba"]).save(os.path.join(out_dir, f"{step_str}.png"))
+
+    def callback_rgb_every_timestep(self, env, sim, substep: int):
+        """
+        Simulation callback: capture RGB at every simulation substep (timestep).
+        Increments step index so filenames advance monotonically within a trajectory.
+        """
+        for batch_idx in range(self._sim_env.batch_size):
+            self._export_policy_rgb_only(batch_idx, subfolder="color_dense", randomize=False)
+        self._dense_step_idx += 1
+
+    def callback_rgb_every_step_end(self, env, sim, substep: int):
+        """
+        Simulation callback: capture RGB once per environment step (at end of substeps).
+        Useful if you want one frame per step, not per substep.
+        """
+        if substep == (self._sim_env.sim.substeps - 1):
+            for batch_idx in range(self._sim_env.batch_size):
+                self._export_policy_rgb_only(batch_idx, subfolder="color_step", randomize=False)
+            self._dense_step_idx += 1
     
     def _get_export_mesh(self, batch_idx: int) -> trimesh.Trimesh:
         garment_mesh = self._sim_env.garment.get_mesh(batch_idx)
@@ -246,6 +287,7 @@ class ObservationExporter:
         with open(os.path.join(self._get_trajectory_path(), "completed.txt"), "w") as f_obj:
             pass
         self._step_idx = 0
+        self._dense_step_idx = 0
         self._side_idx = 0
         self._traj_idx += 1
 

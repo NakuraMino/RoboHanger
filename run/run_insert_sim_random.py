@@ -1,8 +1,5 @@
 import logging
-logger = logging.getLogger(__name__)
-
 import taichi as ti
-
 import os
 import sys
 import pathlib
@@ -11,17 +8,13 @@ import copy
 import json
 from typing import Dict, Optional
 import pprint
-
 import numpy as np
-import torch
-
+# import torch
 import trimesh
 import trimesh.transformations as tra
 import tqdm
-
 import omegaconf
 import hydra
-
 import robohang.common.utils as utils
 import robohang.sim.api as api
 import robohang.sim.sim_utils as sim_utils
@@ -30,6 +23,8 @@ from robohang.agent.base_agent import GalbotOneAgent
 from robohang.policy.insert.insert_gym import InsertGym
 from robohang.policy.insert.insert_policy import InsertPolicyRandom
 from robohang.policy.policy_utils import ObservationExporter
+
+logger = logging.getLogger(__name__)
 
 
 @hydra.main(config_path="../config/run", config_name=pathlib.Path(__file__).stem, version_base='1.3')
@@ -68,6 +63,9 @@ def main(cfg: omegaconf.DictConfig):
     )
     if not (output_cfg.collect_mode):
         callbacks.append(exporter.callback_side_view)
+    # Always collect dense RGB frames at every timestep
+    # callbacks.append(exporter.callback_rgb_every_timestep)
+    callbacks.append(exporter.callback_rgb_every_step_end)
 
     def export_all(action_and_info: Optional[dict]):
         def export_json(path, info):

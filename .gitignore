@@ -25,3 +25,4 @@ imgui.ini
 # pixi environments
 .pixi
 *.egg-info
+visualizations

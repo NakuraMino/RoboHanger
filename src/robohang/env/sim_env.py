@@ -578,7 +578,6 @@ class SimEnv:
                 self._cfg.asset.grippers.parameter, 
             ),
         )
-
         # add robot hanger
         self._robot_hanger = RobotHanger(self._robot, self._hanger)
 
@@ -599,7 +598,6 @@ class SimEnv:
             self._sim, self._garment, self._robot, 
             self._cfg.sim.garment_robot, self._glb_cfg
         )
-
         # add renderer
         self._renderer = SapienRenderer(
             utils.get_path_handler()(self._cfg.asset.robot.cfg.urdf_path),
