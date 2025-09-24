@@ -211,6 +211,248 @@ class ObservationExporter:
             for batch_idx in range(self._sim_env.batch_size):
                 self._export_policy_rgb_only(batch_idx, subfolder="color_step", randomize=False)
             self._dense_step_idx += 1
+
+    def _export_top_view_rgb_only(self, batch_idx: int, subfolder: str = "color_step_top_view", randomize: bool = False):
+        """
+        Export only the RGB image from topdown camera for the given batch.
+        This captures a top-down view of the scene.
+        """
+        base_dir = self._get_policy_obs_base_dir(batch_idx)
+        step_str = self._get_dense_step_str()
+
+        result, _, _ = self._agent.get_obs("topdown", "small", batch_idx, randomize)
+        out_dir = os.path.join(base_dir, subfolder)
+        os.makedirs(out_dir, exist_ok=True)
+        Image.fromarray(result["rgba"]).save(os.path.join(out_dir, f"{step_str}.png"))
+
+    def callback_top_view_rgb_every_step_end(self, env, sim, substep: int):
+        """
+        Simulation callback: capture top-view RGB once per environment step (at end of substeps).
+        Saves to obs/<batch>/color_step_top_view/<step>.png
+        """
+        if substep == (self._sim_env.sim.substeps - 1):
+            for batch_idx in range(self._sim_env.batch_size):
+                self._export_top_view_rgb_only(batch_idx, subfolder="color_step_top_view", randomize=False)
+            self._dense_step_idx += 1
+
+    def _export_wrist_cameras_rgb_and_matrices(self, batch_idx: int, randomize: bool = False):
+        """
+        Export RGB images and camera matrices from both left and right wrist cameras for the given batch.
+        Since wrist cameras move with the arms, their extrinsics change at every timestep.
+        """
+        base_dir = self._get_policy_obs_base_dir(batch_idx)
+        step_str = self._get_dense_step_str()
+
+        # Export left wrist camera
+        result_left, _, camera_info_left = self._agent.get_obs("left", "small", batch_idx, randomize)
+        out_dir_left = os.path.join(base_dir, "color_step_left_wrist")
+        os.makedirs(out_dir_left, exist_ok=True)
+        Image.fromarray(result_left["rgba"]).save(os.path.join(out_dir_left, f"{step_str}.png"))
+
+        # Export right wrist camera
+        result_right, _, camera_info_right = self._agent.get_obs("right", "small", batch_idx, randomize)
+        out_dir_right = os.path.join(base_dir, "color_step_right_wrist")
+        os.makedirs(out_dir_right, exist_ok=True)
+        Image.fromarray(result_right["rgba"]).save(os.path.join(out_dir_right, f"{step_str}.png"))
+
+        # Export camera matrices for both wrist cameras (they change at every timestep)
+        self._export_dynamic_camera_matrices(batch_idx, "left", camera_info_left)
+        self._export_dynamic_camera_matrices(batch_idx, "right", camera_info_right)
+
+    def callback_wrist_cameras_rgb_every_step_end(self, env, sim, substep: int):
+        """
+        Simulation callback: capture left and right wrist camera RGB and matrices once per environment step (at end of substeps).
+        Saves to obs/<batch>/color_step_left_wrist/<step>.png, obs/<batch>/color_step_right_wrist/<step>.png
+        and obs/<batch>/camera_matrices_dynamic/<camera>_<matrices>_<step>.npy
+        """
+        if substep == (self._sim_env.sim.substeps - 1):
+            for batch_idx in range(self._sim_env.batch_size):
+                self._export_wrist_cameras_rgb_and_matrices(batch_idx, randomize=False)
+            self._dense_step_idx += 1
+
+    def _export_camera_matrices(self, batch_idx: int, camera_name: str, subfolder: str = "camera_matrices"):
+        """
+        Export camera intrinsics and extrinsics matrices for the given batch and camera.
+        Saves as separate .npy files for efficient numerical storage.
+        Only saves once since camera poses are static.
+        """
+        base_dir = self._get_policy_obs_base_dir(batch_idx)
+        
+        # Create output directory
+        out_dir = os.path.join(base_dir, subfolder)
+        os.makedirs(out_dir, exist_ok=True)
+        
+        # Check if matrices already exist for this camera (skip if already saved)
+        intrinsics_file = os.path.join(out_dir, f"{camera_name}_intrinsics.npy")
+        extrinsics_file = os.path.join(out_dir, f"{camera_name}_extrinsics.npy")
+        metadata_file = os.path.join(out_dir, f"{camera_name}_metadata.json")
+        
+        if os.path.exists(intrinsics_file) and os.path.exists(extrinsics_file) and os.path.exists(metadata_file):
+            return  # Already saved, skip
+        
+        # Get camera observation to extract matrices
+        if camera_name == "direct":
+            result, mask_str_to_idx, camera_info = self._agent.get_obs(camera_name, "small", batch_idx, False, pos=self._agent.direct_obs)
+        else:
+            result, mask_str_to_idx, camera_info = self._agent.get_obs(camera_name, "small", batch_idx, False)
+        
+        # Extract camera properties and pose
+        camera_prop = camera_info["camera_prop"]
+        camera_pose = camera_info["camera_pose"]
+        
+        # Compute intrinsics and extrinsics matrices
+        intrinsics_matrix = camera_property_to_intrinsics_matrix(camera_prop)  # 3x3 matrix
+        extrinsics_matrix = camera_pose_to_matrix(camera_pose)  # 4x4 matrix
+        
+        # Save matrices as .npy files (without step number since they're static)
+        np.save(intrinsics_file, intrinsics_matrix)
+        np.save(extrinsics_file, extrinsics_matrix)
+        
+        # Also save camera pose and properties as JSON for reference (lightweight metadata)
+        camera_metadata = {
+            "camera_name": camera_name,
+            "camera_pose": camera_pose,  # [x, y, z, qw, qx, qy, qz]
+            "camera_properties": {
+                "width": camera_prop.width,
+                "height": camera_prop.height,
+                "fx": camera_prop.fx,
+                "fy": camera_prop.fy,
+                "cx": camera_prop.cx,
+                "cy": camera_prop.cy,
+                "skew": camera_prop.skew
+            }
+        }
+        
+        with open(metadata_file, "w") as f:
+            json.dump(camera_metadata, f, indent=2)
+
+
+
+    def _export_full_arm_state(self, batch_idx: int, subfolder: str = "full_arm_state"):
+        """
+        Export full arm joint angles and gripper poses (position + orientation) for the given batch.
+        Saves as separate .npy files for efficient numerical storage.
+        Includes all robot joints and gripper TCP coordinates and orientations.
+        """
+        base_dir = self._get_policy_obs_base_dir(batch_idx)
+        step_str = self._get_dense_step_str()
+
+        # Get all robot joint positions
+        all_joint_pos = self._sim_env.robot.get_cfg_pos()
+        
+        # Define all joint groups
+        leg_joints = ["leg_joint1", "leg_joint2", "leg_joint3", "leg_joint4"]
+        head_joints = ["head_joint1", "head_joint2"]
+        left_arm_joints = [f"left_arm_joint{i}" for i in range(1, 8)]
+        right_arm_joints = [f"right_arm_joint{i}" for i in range(1, 8)]
+        gripper_joints = [
+            "left_gripper_left_joint", "left_gripper_right_joint",
+            "right_gripper_left_joint", "right_gripper_right_joint"
+        ]
+        
+        # Collect all joint angles
+        joint_angles = {}
+        all_joints = leg_joints + head_joints + left_arm_joints + right_arm_joints + gripper_joints
+        
+        for joint_name in all_joints:
+            if joint_name in all_joint_pos:
+                # Convert tensor to float for JSON serialization
+                joint_angles[joint_name] = float(all_joint_pos[joint_name][batch_idx])
+        
+        # Get gripper poses (position + orientation) from TCP links
+        # get_link_pos returns [B, 7] = [x, y, z, qw, qx, qy, qz]
+        left_gripper_pose = self._sim_env.robot.get_link_pos(self._agent.left_grasp_link)
+        right_gripper_pose = self._sim_env.robot.get_link_pos(self._agent.right_grasp_link)
+        
+        # Prepare numpy arrays for efficient storage
+        out_dir = os.path.join(base_dir, subfolder)
+        os.makedirs(out_dir, exist_ok=True)
+        
+        # Save joint angles as numpy array
+        # Create ordered list of joint names and values for consistent indexing
+        joint_names = sorted(joint_angles.keys())  # Alphabetical order for consistency
+        joint_values = np.array([joint_angles[name] for name in joint_names], dtype=np.float32)
+        
+        # Save joint angles and their names
+        np.save(os.path.join(out_dir, f"joint_angles_{step_str}.npy"), joint_values)
+        np.save(os.path.join(out_dir, f"joint_names_{step_str}.npy"), np.array(joint_names, dtype=object))
+        
+        # Save gripper poses as numpy arrays
+        left_pose = np.array([
+            left_gripper_pose[batch_idx, 0].item(),  # x
+            left_gripper_pose[batch_idx, 1].item(),  # y  
+            left_gripper_pose[batch_idx, 2].item(),  # z
+            left_gripper_pose[batch_idx, 3].item(),  # qw
+            left_gripper_pose[batch_idx, 4].item(),  # qx
+            left_gripper_pose[batch_idx, 5].item(),  # qy
+            left_gripper_pose[batch_idx, 6].item()   # qz
+        ], dtype=np.float32)
+        
+        right_pose = np.array([
+            right_gripper_pose[batch_idx, 0].item(),  # x
+            right_gripper_pose[batch_idx, 1].item(),  # y
+            right_gripper_pose[batch_idx, 2].item(),  # z
+            right_gripper_pose[batch_idx, 3].item(),  # qw
+            right_gripper_pose[batch_idx, 4].item(),  # qx
+            right_gripper_pose[batch_idx, 5].item(),  # qy
+            right_gripper_pose[batch_idx, 6].item()   # qz
+        ], dtype=np.float32)
+        
+        np.save(os.path.join(out_dir, f"left_gripper_pose_{step_str}.npy"), left_pose)
+        np.save(os.path.join(out_dir, f"right_gripper_pose_{step_str}.npy"), right_pose)
+
+    def _export_dynamic_camera_matrices(self, batch_idx: int, camera_name: str, camera_info: dict, subfolder: str = "camera_matrices_dynamic"):
+        """
+        Export camera intrinsics and extrinsics matrices for moving cameras (like wrist cameras).
+        Saves matrices with step numbers since they change at every timestep.
+        """
+        base_dir = self._get_policy_obs_base_dir(batch_idx)
+        step_str = self._get_dense_step_str()
+        
+        # Extract camera properties and pose from the already-computed camera_info
+        camera_prop = camera_info["camera_prop"]
+        camera_pose = camera_info["camera_pose"]
+        
+        # Compute intrinsics and extrinsics matrices
+        intrinsics_matrix = camera_property_to_intrinsics_matrix(camera_prop)  # 3x3 matrix
+        extrinsics_matrix = camera_pose_to_matrix(camera_pose)  # 4x4 matrix
+        
+        # Create output directory
+        out_dir = os.path.join(base_dir, subfolder)
+        os.makedirs(out_dir, exist_ok=True)
+        
+        # Save matrices as .npy files (with step number since they change over time)
+        np.save(os.path.join(out_dir, f"{camera_name}_intrinsics_{step_str}.npy"), intrinsics_matrix)
+        np.save(os.path.join(out_dir, f"{camera_name}_extrinsics_{step_str}.npy"), extrinsics_matrix)
+        
+        # Also save camera pose and properties as JSON for reference (lightweight metadata)
+        camera_metadata = {
+            "camera_name": camera_name,
+            "step": step_str,
+            "camera_pose": camera_pose,  # [x, y, z, qw, qx, qy, qz]
+            "camera_properties": {
+                "width": camera_prop.width,
+                "height": camera_prop.height,
+                "fx": camera_prop.fx,
+                "fy": camera_prop.fy,
+                "cx": camera_prop.cx,
+                "cy": camera_prop.cy,
+                "skew": camera_prop.skew
+            }
+        }
+        
+        with open(os.path.join(out_dir, f"{camera_name}_metadata_{step_str}.json"), "w") as f:
+            json.dump(camera_metadata, f, indent=2)
+
+    def callback_full_arm_state_every_step_end(self, env, sim, substep: int):
+        """
+        Simulation callback: capture full arm joint angles and gripper poses (position + orientation) once per environment step.
+        Saves to obs/<batch>/full_arm_state/ as separate .npy files for efficient numerical storage.
+        """
+        if substep == (self._sim_env.sim.substeps - 1):
+            for batch_idx in range(self._sim_env.batch_size):
+                self._export_full_arm_state(batch_idx, subfolder="full_arm_state")
+            self._dense_step_idx += 1
     
     def _get_export_mesh(self, batch_idx: int) -> trimesh.Trimesh:
         garment_mesh = self._sim_env.garment.get_mesh(batch_idx)

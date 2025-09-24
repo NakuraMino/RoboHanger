@@ -61,11 +61,25 @@ def main(cfg: omegaconf.DictConfig):
         total_traj=output_cfg.total_traj, 
         total_step=5, 
     )
+    
+    # Export static camera matrices once (since camera poses don't change)
+    # Note: Only for cameras with fixed positions, not wrist cameras that move with the arms
+    for batch_idx in range(sim_env.batch_size):
+        exporter._export_camera_matrices(batch_idx, "direct")
+        exporter._export_camera_matrices(batch_idx, "topdown")
+        exporter._export_camera_matrices(batch_idx, "side")
+    
     if not (output_cfg.collect_mode):
         callbacks.append(exporter.callback_side_view)
     # Always collect dense RGB frames at every timestep
     # callbacks.append(exporter.callback_rgb_every_timestep)
     callbacks.append(exporter.callback_rgb_every_step_end)
+    # Collect top-view RGB frames at every step end
+    callbacks.append(exporter.callback_top_view_rgb_every_step_end)
+    # Collect wrist camera RGB frames at every step end
+    callbacks.append(exporter.callback_wrist_cameras_rgb_every_step_end)
+    # Collect full arm state (all joint angles + gripper poses with position & orientation) at every step end
+    callbacks.append(exporter.callback_full_arm_state_every_step_end)
 
     def export_all(action_and_info: Optional[dict]):
         def export_json(path, info):

@@ -22,7 +22,7 @@ control:
 
 glb_cfg:
   seed: ${_eval_:'int(__import__("numpy").random.randint(0, 2 ** 31))'}
-  batch_size: 1 # ${_eval_:'50 if ${output.collect_mode} == True else 4'}
+  batch_size: ${_eval_:'50 if ${output.collect_mode} == True else 4'}
   default_float: float32
   default_int: int32
   torch_device: cuda

@@ -56,9 +56,9 @@ class BaseAgent:
 
         # camera
         self._camera_info = dict()
-        for s in ["top", "left", "right", "side"]:
+        for s in ["top", "left", "right", "side", "topdown"]:
             camera_cfg = getattr(self._cfg.camera, s)
-            if s == "side":
+            if s in ["side", "topdown"]:
                 self._camera_info[s] = dict(
                     pos=copy.deepcopy(camera_cfg.pos),
                 )
@@ -86,6 +86,7 @@ class BaseAgent:
         self.get_obs("left", "medium", 0, True)
         self.get_obs("right", "large", 0, False)
         self.get_obs("side", "small", 0, True)
+        self.get_obs("topdown", "small", 0, False)
 
         # constants
         self._ik_solver_cfg = copy.deepcopy(agent_cfg.inverse_kinematics.solver)
@@ -111,7 +112,7 @@ class BaseAgent:
     @sim_utils.GLOBAL_TIMER.timer
     def get_obs(
         self, 
-        camera_name: Literal["top", "left", "right", "side", "direct"], 
+        camera_name: Literal["top", "left", "right", "side", "topdown", "direct"], 
         image_size: Literal["small", "medium", "large"], 
         batch_idx: int,
         randomize: bool,
@@ -124,7 +125,7 @@ class BaseAgent:
                 (self._sim_env.robot.urdf.link_transform_map[self._camera_info[camera_name]["link"]])[batch_idx, :]
             ) @ self._camera_info[camera_name]["origin"]
             camera_pose = camera_pose_mat[:3, 3].tolist() + tra.quaternion_from_matrix(camera_pose_mat).tolist()
-        elif camera_name == "side":
+        elif camera_name in ["side", "topdown"]:
             camera_pose = self._camera_info[camera_name]["pos"]
         elif camera_name == "direct":
             camera_pose = kwargs["pos"]
